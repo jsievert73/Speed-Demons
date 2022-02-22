@@ -18,9 +18,11 @@ public class EnemyController : MonoBehaviour
     {
         Vector3 sample1 = new Vector3(0,0,0); 
         Vector3 sample2 = new Vector3(50,0,20);
+        Vector3 sample3 = new Vector3(0,0,30);
         currentPosition = transform.position;
         waypoints.Add(sample1);
         waypoints.Add(sample2);
+        waypoints.Add(sample3);
         thisEnemy = GetComponent<Rigidbody>();
         
     }
