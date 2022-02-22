@@ -11,6 +11,7 @@ public class EnemyController : MonoBehaviour
     private Rigidbody thisEnemy = null;
     bool finishX = false;
     bool finishY = false;
+    public GameObject visualModel;
     private Vector3 forceDirection = new Vector3(0,0,0);
     // Start is called before the first frame update
     void Start()
@@ -75,5 +76,29 @@ public class EnemyController : MonoBehaviour
             }
             thisEnemy.AddForce(forceDirection, ForceMode.Acceleration);
         }
+        float calculatedRotation = 0;
+        if(thisEnemy.velocity.x > 0 )
+        {
+            if(thisEnemy.velocity.z > 0)
+            {
+                calculatedRotation = 90-(Mathf.Rad2Deg*Mathf.Atan(thisEnemy.velocity.z/thisEnemy.velocity.x));
+            }
+            else
+            {
+                calculatedRotation = 180+(Mathf.Rad2Deg*Mathf.Atan(thisEnemy.velocity.z/thisEnemy.velocity.x));
+            }
+        }
+        else
+        {
+            if(thisEnemy.velocity.z > 0)
+            {
+                calculatedRotation = 270-(Mathf.Rad2Deg*Mathf.Atan(thisEnemy.velocity.z/thisEnemy.velocity.x));
+            }
+            else
+            {
+                calculatedRotation = 180+(Mathf.Rad2Deg*Mathf.Atan(thisEnemy.velocity.z/thisEnemy.velocity.x));
+            }
+        }
+        visualModel.transform.eulerAngles = new Vector3(0,calculatedRotation,0);
     }
 }
