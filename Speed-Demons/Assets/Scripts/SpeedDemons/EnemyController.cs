@@ -55,33 +55,52 @@ public class EnemyController : MonoBehaviour
         else
         {
             print("POSITION" + transform.position.x + "targetPosition"+ targetWaypoint.x);
-            if(Mathf.Abs(transform.position.x - targetWaypoint.x) < 5)
+            if(Mathf.Abs(transform.position.x - targetWaypoint.x) < 0.7)
             {
                 finishX = true;
                 print("FINISH X");
             }
             else if(transform.position.x > targetWaypoint.x)
             {
-                forceDirection.x = -2;
-                finishX = false;
+                if(thisEnemy.velocity.x > 0)
+                {
+                    forceDirection.x = -5;
+                }
+                else
+                {
+                    forceDirection.x = -2;
+                    finishX = false;
+                }
             }
             else
             {
+                if(thisEnemy.velocity.x < 0)
+                {
+                    forceDirection.x = 5;
+                }
                 forceDirection.x = 2;
                 finishX = false;
             }
-            if(Mathf.Abs(transform.position.y - targetWaypoint.y) < 5)
+            if(Mathf.Abs(transform.position.y - targetWaypoint.y) < 0.7)
             {
                 finishY = true;
                 print("FINISH Y");
             }
             else if(transform.position.y > targetWaypoint.y)
             {
+                if(thisEnemy.velocity.y > 0)
+                {
+                    forceDirection.y = -5;
+                }
                 forceDirection.y = -2;
                 finishY = false;
             }
             else
             {
+                if(thisEnemy.velocity.y < 0)
+                {
+                    forceDirection.y = 5;
+                }
                 forceDirection.y = 2;
                 finishY = false;
             }
@@ -91,6 +110,7 @@ public class EnemyController : MonoBehaviour
                 print("NEW WAYPOINT");
                 finishX = false;
                 finishY = false;
+                thisEnemy.velocity = new Vector3(0,0,0);
             }
             thisEnemy.AddForce(forceDirection, ForceMode.Acceleration);
         }
