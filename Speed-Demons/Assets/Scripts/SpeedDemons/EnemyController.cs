@@ -13,6 +13,8 @@ public class EnemyController : MonoBehaviour
     bool finishY = false;
     public GameObject visualModel;
     private Vector3 forceDirection = new Vector3(0,0,0);
+    public Unit referenceUnit;
+    private bool HasUpdated = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,16 +22,30 @@ public class EnemyController : MonoBehaviour
         Vector3 sample2 = new Vector3(50,0,20);
         Vector3 sample3 = new Vector3(0,0,30);
         currentPosition = transform.position;
-        waypoints.Add(sample1);
-        waypoints.Add(sample2);
-        waypoints.Add(sample3);
+        //waypoints.Add(sample1);
+        //waypoints.Add(sample2);
+        //waypoints.Add(sample3);
         thisEnemy = GetComponent<Rigidbody>();
+        print(referenceUnit.tileX);
+        print(referenceUnit.currentPath);
+        
         
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(!HasUpdated)
+        {
+            foreach (Node waypoint in referenceUnit.currentPath)
+            {
+                Vector3 sampler = new Vector3(0,0,-5);
+                sampler.x = waypoint.x;
+                sampler.y = waypoint.y;
+                waypoints.Add(sampler);
+            }
+            HasUpdated = true;
+        }
         if (targetWaypoint.x > 5000)
         {
             print("CHECK: "+ waypointCount);
@@ -54,19 +70,19 @@ public class EnemyController : MonoBehaviour
                 forceDirection.x = 2;
                 finishX = false;
             }
-            if(Mathf.Abs(transform.position.z - targetWaypoint.z) < 5)
+            if(Mathf.Abs(transform.position.y - targetWaypoint.y) < 5)
             {
                 finishY = true;
                 print("FINISH Y");
             }
-            else if(transform.position.z > targetWaypoint.z)
+            else if(transform.position.y > targetWaypoint.y)
             {
-                forceDirection.z = -2;
+                forceDirection.y = -2;
                 finishY = false;
             }
             else
             {
-                forceDirection.z = 2;
+                forceDirection.y = 2;
                 finishY = false;
             }
             if(finishX && finishY)
@@ -81,26 +97,26 @@ public class EnemyController : MonoBehaviour
         float calculatedRotation = 0;
         if(thisEnemy.velocity.x > 0 )
         {
-            if(thisEnemy.velocity.z > 0)
+            if(thisEnemy.velocity.y > 0)
             {
-                calculatedRotation = 90-(Mathf.Rad2Deg*Mathf.Atan(thisEnemy.velocity.z/thisEnemy.velocity.x));
+                calculatedRotation = 90-(Mathf.Rad2Deg*Mathf.Atan(thisEnemy.velocity.y/thisEnemy.velocity.x));
             }
             else
             {
-                calculatedRotation = 180+(Mathf.Rad2Deg*Mathf.Atan(thisEnemy.velocity.z/thisEnemy.velocity.x));
+                calculatedRotation = 180+(Mathf.Rad2Deg*Mathf.Atan(thisEnemy.velocity.y/thisEnemy.velocity.x));
             }
         }
         else
         {
-            if(thisEnemy.velocity.z > 0)
+            if(thisEnemy.velocity.y > 0)
             {
-                calculatedRotation = 270-(Mathf.Rad2Deg*Mathf.Atan(thisEnemy.velocity.z/thisEnemy.velocity.x));
+                calculatedRotation = 270-(Mathf.Rad2Deg*Mathf.Atan(thisEnemy.velocity.y/thisEnemy.velocity.x));
             }
             else
             {
-                calculatedRotation = 180+(Mathf.Rad2Deg*Mathf.Atan(thisEnemy.velocity.z/thisEnemy.velocity.x));
+                calculatedRotation = 180+(Mathf.Rad2Deg*Mathf.Atan(thisEnemy.velocity.y/thisEnemy.velocity.x));
             }
         }
-        visualModel.transform.eulerAngles = new Vector3(0,calculatedRotation,0);
+        visualModel.transform.eulerAngles = new Vector3(0,0,calculatedRotation);
     }
 }

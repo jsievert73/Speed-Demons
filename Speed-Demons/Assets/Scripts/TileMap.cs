@@ -24,6 +24,14 @@ public class TileMap : MonoBehaviour
         GenerateMapData();
         GeneratePathfindingGraph();
         GenerateMapVisuals();
+        GeneratePathTo(8,8,selectedUnit.GetComponent<Unit>());
+        foreach (Node waypoint in selectedUnit.GetComponent<Unit>().currentPath)
+        {
+            Vector3 sampler = new Vector3(0,0,-5);
+            sampler.x = waypoint.x;
+            sampler.y = waypoint.y;
+            print("SAMPLER" + sampler);
+        }
     }
     void GenerateMapData() 
     {
@@ -239,5 +247,6 @@ public class TileMap : MonoBehaviour
         //Right now it is backwards though, so Reverse!
         currentPath.Reverse();
         piece.GetComponent<Unit>().currentPath = currentPath;
+        print("FINISHED PATH CREATION");
     }
 }
