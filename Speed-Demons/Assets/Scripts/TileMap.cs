@@ -104,11 +104,11 @@ public class TileMap : MonoBehaviour
                     graph[x,y].neighbours.Add(graph[x,y-1]);
                     if (left)
                     {
-                        graph[x,y].neighbours.Add(graph[x-1,y-1]);
+                        //graph[x,y].neighbours.Add(graph[x-1,y-1]);
                     }
                     if (right)
                     {
-                        graph[x,y].neighbours.Add(graph[x+1,y-1]);
+                        //graph[x,y].neighbours.Add(graph[x+1,y-1]);
                     }
                 }
                 if (y < mapSizeX-1)
@@ -116,11 +116,11 @@ public class TileMap : MonoBehaviour
                     graph[x,y].neighbours.Add(graph[x,y+1]);
                     if (left)
                     {
-                        graph[x,y].neighbours.Add(graph[x-1,y+1]);
+                        //graph[x,y].neighbours.Add(graph[x-1,y+1]);
                     }
                     if (right)
                     {
-                        graph[x,y].neighbours.Add(graph[x+1,y+1]);
+                        //graph[x,y].neighbours.Add(graph[x+1,y+1]);
                     }
                 }
             }
