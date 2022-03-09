@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class DemonTimer : MonoBehaviour
 {
     public GameObject DemonParent;
+    private EnemyController thisDemon;
     public Image radialFill;
     private float maxFill = 2f;
     private float minFill = 0f;
@@ -27,12 +28,14 @@ public class DemonTimer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        CurrentFill = 2f;
+        CurrentFill = maxFill;
+        thisDemon = DemonParent.GetComponent<EnemyController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        CurrentFill -= 0.0032f;
+        thisDemon.currentSpeed += Time.deltaTime * 0.25f;
+        CurrentFill -= Time.deltaTime * 0.25f;
     }
 }

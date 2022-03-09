@@ -14,6 +14,7 @@ public class EnemyController : MonoBehaviour
     public GameObject visualModel;
     private Vector3 forceDirection = new Vector3(0,0,0);
     public Unit referenceUnit;
+    public float currentSpeed = 2f;
     private bool HasUpdated = false;
     // Start is called before the first frame update
     void Start()
@@ -40,8 +41,8 @@ public class EnemyController : MonoBehaviour
             foreach (Node waypoint in referenceUnit.currentPath)
             {
                 Vector3 sampler = new Vector3(0,0,-5);
-                sampler.x = waypoint.x;
-                sampler.y = waypoint.y;
+                sampler.x = waypoint.x+0.5f;
+                sampler.y = waypoint.y-0.5f;
                 waypoints.Add(sampler);
             }
             HasUpdated = true;
@@ -55,7 +56,7 @@ public class EnemyController : MonoBehaviour
         else
         {
             print("POSITION" + transform.position.x + "targetPosition"+ targetWaypoint.x);
-            if(Mathf.Abs(transform.position.x - targetWaypoint.x) < 0.7 || finishX)
+            if(Mathf.Abs(transform.position.x - targetWaypoint.x) < 0.3 || finishX)
             {
                 finishX = true;
                 print("FINISH X");
@@ -65,23 +66,23 @@ public class EnemyController : MonoBehaviour
             {
                 if(thisEnemy.velocity.x > 0)
                 {
-                    forceDirection.x = -5;
+                    forceDirection.x = -currentSpeed-3;
                 }
                 else
                 {
-                    forceDirection.x = -2;
+                    forceDirection.x = -currentSpeed;
                 }
             }
             else
             {
                 if(thisEnemy.velocity.x < 0)
                 {
-                    forceDirection.x = 5;
+                    forceDirection.x = currentSpeed +3;
                 }
-                forceDirection.x = 2;
+                forceDirection.x = currentSpeed;
                 finishX = false;
             }
-            if(Mathf.Abs(transform.position.y - targetWaypoint.y) < 0.7 || finishY)
+            if(Mathf.Abs(transform.position.y - targetWaypoint.y) < 0.3 || finishY)
             {
                 finishY = true;
                 print("FINISH Y");
@@ -91,17 +92,17 @@ public class EnemyController : MonoBehaviour
             {
                 if(thisEnemy.velocity.y > 0)
                 {
-                    forceDirection.y = -5;
+                    forceDirection.y = -currentSpeed-3;
                 }
-                forceDirection.y = -2;
+                forceDirection.y = -currentSpeed;
             }
             else
             {
                 if(thisEnemy.velocity.y < 0)
                 {
-                    forceDirection.y = 5;
+                    forceDirection.y = currentSpeed+3;
                 }
-                forceDirection.y = 2;
+                forceDirection.y = currentSpeed;
             }
             if(finishX && finishY)
             {
