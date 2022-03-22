@@ -8,11 +8,21 @@ public class Node
         public int x;
         public int y;
         public Unit housingUnit;
+        public bool chokePoint;
+        public bool chokeAdjacent;
+        public bool inUse;
+        public Node predecessor;
+        public Node follower;
 
         public Node()
         {
             neighbours = new List<Node>();
             housingUnit = null;
+            chokePoint = false;
+            chokeAdjacent = false;
+            inUse = false;
+            predecessor = null;
+            follower = null;
         }
         public float DistanceTo(Node n)
         {

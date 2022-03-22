@@ -6,7 +6,7 @@ public class EnemyController : MonoBehaviour
 {
     List<Vector3> waypoints = new List<Vector3>(); 
     int waypointCount = 0;
-    private Vector3 targetWaypoint = Vector3.positiveInfinity;
+    public Vector3 targetWaypoint = Vector3.positiveInfinity;
     private Vector3 currentPosition = new Vector3(0,0,0);
     private Rigidbody thisEnemy = null;
     bool finishX = false;
@@ -16,6 +16,7 @@ public class EnemyController : MonoBehaviour
     public Unit referenceUnit;
     public float currentSpeed = 2f;
     private bool HasUpdated = false;
+    public TileMap map;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,14 +24,14 @@ public class EnemyController : MonoBehaviour
         Vector3 sample2 = new Vector3(50,0,20);
         Vector3 sample3 = new Vector3(0,0,30);
         currentPosition = transform.position;
+        DemonSpawner.UpdateDemon(this);
         //waypoints.Add(sample1);
         //waypoints.Add(sample2);
         //waypoints.Add(sample3);
         thisEnemy = GetComponent<Rigidbody>();
-        print(referenceUnit.tileX);
-        print(referenceUnit.currentPath);
-        
-        
+        referenceUnit.tileX = 0;
+        referenceUnit.tileY = 0;
+        referenceUnit.UpdateHousing();
     }
 
     // Update is called once per frame
@@ -38,6 +39,7 @@ public class EnemyController : MonoBehaviour
     {
         if(!HasUpdated)
         {
+            map.GeneratePathTo(8,8,referenceUnit);
             foreach (Node waypoint in referenceUnit.currentPath)
             {
                 Vector3 sampler = new Vector3(0,0,-5);
@@ -120,7 +122,7 @@ public class EnemyController : MonoBehaviour
             thisEnemy.velocity = normalizedDirection;
             //thisEnemy.AddForce(forceDirection, ForceMode.Acceleration);
         }
-        float calculatedRotation = 0;
+        /*float calculatedRotation = 0;
         if(thisEnemy.velocity.x > 0 )
         {
             if(thisEnemy.velocity.y > 0)
@@ -143,6 +145,18 @@ public class EnemyController : MonoBehaviour
                 calculatedRotation = 180+(Mathf.Rad2Deg*Mathf.Atan(thisEnemy.velocity.y/thisEnemy.velocity.x));
             }
         }
-        visualModel.transform.eulerAngles = new Vector3(0,0,calculatedRotation);
+        visualModel.transform.eulerAngles = new Vector3(0,0,calculatedRotation);*/
+    }
+
+    public void UpdatePath(List<Node> path)
+    {
+        waypoints = new List<Vector3>();
+            foreach (Node waypoint in path)
+            {
+                Vector3 sampler = new Vector3(0,0,-5);
+                sampler.x = waypoint.x+0.5f;
+                sampler.y = waypoint.y-0.5f;
+                waypoints.Add(sampler);
+            }
     }
 }

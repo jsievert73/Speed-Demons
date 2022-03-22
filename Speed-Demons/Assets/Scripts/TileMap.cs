@@ -8,9 +8,11 @@ public class TileMap : MonoBehaviour
     public GameObject selectedUnit;
     public GameObject player;
     public TileType[] tileTypes;
-    int[,] tiles;
+    public int[,] tiles;
     public Node[,] graph;
     public int enemyCount;
+    private List<Node> currentPath;
+    public List<EnemyController> enemies = new List<EnemyController>();
 
     int mapSizeX = 10;
     int mapSizeY = 10;
@@ -99,17 +101,26 @@ public class TileMap : MonoBehaviour
                 bool right = false;
                 if (x != 0)
                 {
-                    graph[x,y].neighbours.Add(graph[x-1,y]);
+                    if(tiles[x-1,y] != 2)
+                    {
+                        graph[x,y].neighbours.Add(graph[x-1,y]);
+                    }
                     left =true;
                 }
                 if (x < mapSizeX-1)
                 {
-                    graph[x,y].neighbours.Add(graph[x+1,y]);
+                    if(tiles[x+1,y] != 2)
+                    {
+                        graph[x,y].neighbours.Add(graph[x+1,y]);
+                    }
                     right = true;
                 }
                 if (y != 0)
                 {
-                    graph[x,y].neighbours.Add(graph[x,y-1]);
+                    if(tiles[x,y-1] != 2)
+                    {
+                        graph[x,y].neighbours.Add(graph[x,y-1]);
+                    }
                     if (left)
                     {
                         //graph[x,y].neighbours.Add(graph[x-1,y-1]);
@@ -121,7 +132,10 @@ public class TileMap : MonoBehaviour
                 }
                 if (y < mapSizeX-1)
                 {
-                    graph[x,y].neighbours.Add(graph[x,y+1]);
+                    if(tiles[x,y+1] != 2)
+                    {
+                        graph[x,y].neighbours.Add(graph[x,y+1]);
+                    }
                     if (left)
                     {
                         //graph[x,y].neighbours.Add(graph[x-1,y+1]);
@@ -129,6 +143,14 @@ public class TileMap : MonoBehaviour
                     if (right)
                     {
                         //graph[x,y].neighbours.Add(graph[x+1,y+1]);
+                    }
+                }
+                if(graph[x,y].neighbours.Count == 2)
+                {
+                    graph[x,y].chokePoint = true;
+                    foreach(Node neighbor in graph[x,y].neighbours)
+                    {
+                        neighbor.chokeAdjacent = true;
                     }
                 }
             }
@@ -164,10 +186,12 @@ public class TileMap : MonoBehaviour
 
     public void GeneratePathTo(int x, int y, Unit piece)
     {
+        print("BEGIN PATH GENERATION");
         piece.GetComponent<Unit>().currentPath = null;
 
         if(UnitCanEnterTile(x,y) == false)
         {
+            print("QUIT PATH GENERATION");
             //quits out because no path should be found.
             return;
         }
@@ -186,6 +210,7 @@ public class TileMap : MonoBehaviour
 
         foreach(Node v in graph)
         {
+            //resets our data, so that our starting point, source, is the only data we know.
             if(v != source)
             {
                 dist[v] = Mathf.Infinity;
@@ -197,6 +222,7 @@ public class TileMap : MonoBehaviour
 
         while (unvisited.Count > 0)
         {
+            print("UNVISITED COUNT: "+ unvisited.Count);
             // u is going to be unvisited node w/ smallest distance.
             Node u = null;
 
@@ -210,20 +236,23 @@ public class TileMap : MonoBehaviour
 
             if (u == target)
             {
-                break;//Exits the while loop!
+                print("TARGET FOUND");
+                break;//Exits the while loop, because we hit our goal.
             }
 
             unvisited.Remove(u);
             foreach(Node v in u.neighbours)
             {
+                print("Checking v's neighbors");
                 //float alt = dist[u] + u.DistanceTo(v);
                 float alt = dist[u] + CostToEnterTile(v.x,v.y);
+                print("CALCULATED U NODE: " + u.x + "," + u.y);
+                print("DISTANCE[U]: "+ dist[u]+ "   CALCULATED ALT: "+ alt+"   DISTANCE[V]: "+ dist[v]);
                 //in ties, the first neighbour will be selected.
                 //this can create odd paths that are technically the same cost.
-                //I left this in, because it makes the AI move in ways that often
-                //give it more options as the player is a moving target.
                 if(alt < dist[v])
                 {
+                    print("PATH UPDATED PREV DATA");
                     dist[v] = alt;
                     prev[v] = u;
                 }
@@ -232,21 +261,85 @@ public class TileMap : MonoBehaviour
         //We have the shortest route, or there is no route.
         if (prev[target] == null)
         {
+            print("QUIT PATH GENERATION: NO ROUTE");
             //No route to target
             return;
         }
-        List<Node> currentPath = new List<Node>();
+        currentPath = new List<Node>();
         Node curr = target;
+        Node predicate = null;
 
         //Step through "prev" chain and add it to our path.
         while (curr != null)
         {
+            curr.inUse = true;
+            if(predicate != null)
+            {
+                curr.predecessor = predicate;
+                predicate.follower = curr;
+            }
             currentPath.Add(curr);
+            print("ADDED TO CURRENTPATH");
+            predicate = curr;
             curr = prev[curr];
         }
         //Right now it is backwards though, so Reverse!
         currentPath.Reverse();
         piece.GetComponent<Unit>().currentPath = currentPath;
         print("FINISHED PATH CREATION");
+    }
+
+    public void EditPath(int x, int y, Unit piece, int startX, int startY)
+    {
+        piece.GetComponent<Unit>().currentPath = null;
+        piece.tileX = startX;
+        piece.tileY = startY;
+        piece.UpdateHousing();
+        List<Node> oldPath = currentPath;
+        List<Node> finishPath = new List<Node>();
+        GeneratePathTo(x,y,piece);
+        print("EDITED PATH CREATED");
+        bool skip = false;
+        foreach(Node n in oldPath)
+        {
+            print("EDITED OLD PATH ITERATED");
+            if(!skip)
+            {
+                finishPath.Add(n);
+                print("ADDED UNEDITED PATH COMPONENT");
+            }
+            skip = false;
+            if(n == currentPath[0])
+            {
+                foreach(Node cur in currentPath)
+                {
+                    print("ADDED EDITED PATH COMPONENTS");
+                    finishPath.Add(cur);
+                    skip = true;
+                }
+            }
+        }
+        currentPath = finishPath;
+        print("FINISHED EDITED CURRENTPATH LENGTH: " + currentPath.Count);
+        foreach(EnemyController e in enemies)
+        {
+            print("BEGAN EDITED ENEMY");
+            List<Node> disposablePath = currentPath;
+            while(disposablePath != null)
+            {
+                print("DISPOSABLE PATH NOT EMPTY");
+                Node n = disposablePath[0];
+                if(n.x == (int) (e.targetWaypoint.x-0.5f) && n.y == (int) (e.targetWaypoint.y+0.5f))
+                {
+                    print("FOUND DISPOSABLE CROSSOVER");
+                    e.UpdatePath(disposablePath);
+                    disposablePath = null;
+                }
+                else
+                {
+                    disposablePath.Remove(n);
+                }
+            }
+        }
     }
 }

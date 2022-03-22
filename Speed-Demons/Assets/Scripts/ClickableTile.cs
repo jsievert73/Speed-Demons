@@ -10,9 +10,23 @@ public class ClickableTile : MonoBehaviour
     public static bool active = false;
     public static int range = 0;
     public static bool stab = false;
-    void OnMouseUp()
+    async void OnMouseUp()
     {
-        if (active)
+        print("click");
+        map.tiles[tileX,tileY] = 2;
+        if(map.graph[tileX,tileY].inUse)
+        {
+            if((map.graph[tileX,tileY].chokePoint || map.graph[tileX,tileY].chokeAdjacent))
+            {
+                map.EditPath(0,0,map.selectedUnit.GetComponent<Unit>(),8,8);
+            }
+            else
+            {
+                map.EditPath(map.graph[tileX,tileY].predecessor.x, map.graph[tileX,tileY].predecessor.y, map.selectedUnit.GetComponent<Unit>(), map.graph[tileX,tileY].follower.x,map.graph[tileX,tileY].follower.y);
+            }
+        }
+        
+        /*if (active)
         {
             for (int x = 1; x < range+1;x++)
             {
@@ -45,6 +59,6 @@ public class ClickableTile : MonoBehaviour
                 }
             }
             Debug.Log("Invalid Selection");
-        }
+        }*/
     }
 }

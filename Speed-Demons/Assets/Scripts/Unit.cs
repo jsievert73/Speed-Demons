@@ -26,6 +26,11 @@ public class Unit : MonoBehaviour {
 	int moveSpeed = 2;
 	float remainingMovement=0;
 
+	void Start()
+	{
+		//map.GeneratePathTo(8,8, this);
+	}
+
 	void Update() {
 		// Draw our debug line showing the pathfinding!
 		// NOTE: This won't appear in the actual game view.
