@@ -51,17 +51,17 @@ public class EnemyController : MonoBehaviour
         }
         if (targetWaypoint.x > 5000)
         {
-            print("CHECK: "+ waypointCount);
+            //print("CHECK: "+ waypointCount);
             targetWaypoint = waypoints[waypointCount];
             waypointCount += 1;
         }
         else
         {
-            print("POSITION" + transform.position.x + "targetPosition"+ targetWaypoint.x);
+            //print("POSITION" + transform.position.x + "targetPosition"+ targetWaypoint.x);
             if(Mathf.Abs(transform.position.x - targetWaypoint.x) < 0.3 || finishX)
             {
                 finishX = true;
-                print("FINISH X");
+                //print("FINISH X");
                 forceDirection.x = 0;
             }
             else if(transform.position.x > targetWaypoint.x)
@@ -87,7 +87,7 @@ public class EnemyController : MonoBehaviour
             if(Mathf.Abs(transform.position.y - targetWaypoint.y) < 0.3 || finishY)
             {
                 finishY = true;
-                print("FINISH Y");
+                //print("FINISH Y");
                 forceDirection.y = 0;
             }
             else if(transform.position.y > targetWaypoint.y)
@@ -109,7 +109,7 @@ public class EnemyController : MonoBehaviour
             if(finishX && finishY)
             {
                 targetWaypoint = Vector3.positiveInfinity;
-                print("NEW WAYPOINT");
+                //print("NEW WAYPOINT");
                 finishX = false;
                 finishY = false;
                 //thisEnemy.velocity = new Vector3(0,0,0);
@@ -118,7 +118,7 @@ public class EnemyController : MonoBehaviour
             //normalizedDirection = Vector3.Normalize(thisEnemy.position - targetWaypoint);
             //normalizedDirection = normalizedDirection * 5;
             //normalizedDirection.z = 0;
-            print(normalizedDirection.x + "AND" + normalizedDirection.y);
+            //print(normalizedDirection.x + "AND" + normalizedDirection.y);
             thisEnemy.velocity = normalizedDirection;
             //thisEnemy.AddForce(forceDirection, ForceMode.Acceleration);
         }

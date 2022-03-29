@@ -32,7 +32,7 @@ public class TileMap : MonoBehaviour
             Vector3 sampler = new Vector3(0,0,-5);
             sampler.x = waypoint.x;
             sampler.y = waypoint.y;
-            print("SAMPLER" + sampler);
+            //print("SAMPLER" + sampler);
         }
     }
     void GenerateMapData() 
@@ -69,6 +69,7 @@ public class TileMap : MonoBehaviour
         tiles[8, 6] = 2;
     }
 
+    //Accessing our tileTypes data to determine movementCosts
     public float CostToEnterTile(int x, int y)
     {
         TileType tt = tileTypes[tiles[x,y]];
@@ -80,7 +81,7 @@ public class TileMap : MonoBehaviour
     }
 
     
-
+    //A modular graph of Nodes are generated to store map data.
     void GeneratePathfindingGraph()
     {
         graph = new Node[mapSizeX, mapSizeY];
@@ -157,6 +158,7 @@ public class TileMap : MonoBehaviour
         }
     }
 
+    //spawn prefabs for each of the tiles that are defined by tileTypes.
     void GenerateMapVisuals() 
     {
         for (int x =0; x < mapSizeX; x++)
@@ -181,17 +183,18 @@ public class TileMap : MonoBehaviour
     public bool UnitCanEnterTile(int x, int y)
     {
         //could even use this for checking terrain flags, like flying versus walking
+        //But currently we say all tiles areWalkable by default.
         return tileTypes[tiles[x,y]].isWalkable;
     }
 
     public void GeneratePathTo(int x, int y, Unit piece)
     {
-        print("BEGIN PATH GENERATION");
+        //print("BEGIN PATH GENERATION");
         piece.GetComponent<Unit>().currentPath = null;
 
         if(UnitCanEnterTile(x,y) == false)
         {
-            print("QUIT PATH GENERATION");
+            //print("QUIT PATH GENERATION");
             //quits out because no path should be found.
             return;
         }
@@ -201,10 +204,12 @@ public class TileMap : MonoBehaviour
 
         List<Node> unvisited = new List<Node>();
 
+        //take our starting point
         Node source = graph[piece.GetComponent<Unit>().tileX,piece.GetComponent<Unit>().tileY];
-
+        //and our eventual goal
         Node target = graph[x,y];
 
+        //Make our dist dictionary and set source to 0, so that we will use it as our starting point.
         dist[source]=0;
         prev[source]=null;
 
@@ -261,7 +266,7 @@ public class TileMap : MonoBehaviour
         //We have the shortest route, or there is no route.
         if (prev[target] == null)
         {
-            print("QUIT PATH GENERATION: NO ROUTE");
+            //print("QUIT PATH GENERATION: NO ROUTE");
             //No route to target
             return;
         }
@@ -279,14 +284,14 @@ public class TileMap : MonoBehaviour
                 predicate.follower = curr;
             }
             currentPath.Add(curr);
-            print("ADDED TO CURRENTPATH");
+            //print("ADDED TO CURRENTPATH");
             predicate = curr;
             curr = prev[curr];
         }
         //Right now it is backwards though, so Reverse!
         currentPath.Reverse();
         piece.GetComponent<Unit>().currentPath = currentPath;
-        print("FINISHED PATH CREATION");
+        //print("FINISHED PATH CREATION");
     }
 
     public void EditPath(int x, int y, Unit piece, int startX, int startY)
@@ -298,40 +303,40 @@ public class TileMap : MonoBehaviour
         List<Node> oldPath = currentPath;
         List<Node> finishPath = new List<Node>();
         GeneratePathTo(x,y,piece);
-        print("EDITED PATH CREATED");
+        //print("EDITED PATH CREATED");
         bool skip = false;
         foreach(Node n in oldPath)
         {
-            print("EDITED OLD PATH ITERATED");
+            //print("EDITED OLD PATH ITERATED");
             if(!skip)
             {
                 finishPath.Add(n);
-                print("ADDED UNEDITED PATH COMPONENT");
+                //print("ADDED UNEDITED PATH COMPONENT");
             }
             skip = false;
             if(n == currentPath[0])
             {
                 foreach(Node cur in currentPath)
                 {
-                    print("ADDED EDITED PATH COMPONENTS");
+                    //print("ADDED EDITED PATH COMPONENTS");
                     finishPath.Add(cur);
                     skip = true;
                 }
             }
         }
         currentPath = finishPath;
-        print("FINISHED EDITED CURRENTPATH LENGTH: " + currentPath.Count);
+        //print("FINISHED EDITED CURRENTPATH LENGTH: " + currentPath.Count);
         foreach(EnemyController e in enemies)
         {
-            print("BEGAN EDITED ENEMY");
+            //print("BEGAN EDITED ENEMY");
             List<Node> disposablePath = currentPath;
             while(disposablePath != null)
             {
-                print("DISPOSABLE PATH NOT EMPTY");
+                //print("DISPOSABLE PATH NOT EMPTY");
                 Node n = disposablePath[0];
                 if(n.x == (int) (e.targetWaypoint.x-0.5f) && n.y == (int) (e.targetWaypoint.y+0.5f))
                 {
-                    print("FOUND DISPOSABLE CROSSOVER");
+                    //print("FOUND DISPOSABLE CROSSOVER");
                     e.UpdatePath(disposablePath);
                     disposablePath = null;
                 }
