@@ -9,4 +9,15 @@ public class TileType
     public GameObject tileVisualPrefab;
     public float movementCost = 1;
     public bool isWalkable = true;
+    private bool towered = false;
+
+    public bool checkTower()
+    {
+        return towered;
+    }
+
+    public void flipTower()
+    {
+        towered = !towered;
+    }
 }

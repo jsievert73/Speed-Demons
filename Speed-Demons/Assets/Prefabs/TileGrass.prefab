@@ -111,3 +111,8 @@ MonoBehaviour:
   tileX: 0
   tileY: 0
   map: {fileID: 0}
+  TowerTypes:
+  - name: Slow Tower
+    tileVisualPrefab: {fileID: 187918, guid: 77a599bd67f72e24999e1d5d60f433d0, type: 3}
+    movementCost: -1
+    isWalkable: 0

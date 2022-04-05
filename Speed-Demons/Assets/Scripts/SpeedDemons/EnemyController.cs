@@ -17,6 +17,7 @@ public class EnemyController : MonoBehaviour
     public float currentSpeed = 2f;
     private bool HasUpdated = false;
     public TileMap map;
+    public bool finished = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,9 +30,17 @@ public class EnemyController : MonoBehaviour
         //waypoints.Add(sample2);
         //waypoints.Add(sample3);
         thisEnemy = GetComponent<Rigidbody>();
-        referenceUnit.tileX = 0;
-        referenceUnit.tileY = 0;
-        referenceUnit.UpdateHousing();
+        if(referenceUnit != null)
+        {
+            referenceUnit.tileX = 0;
+            referenceUnit.tileY = 0;
+            referenceUnit.UpdateHousing();
+        }
+    }
+
+    public void UpdateHealth()
+    {
+        map.health -= 1;
     }
 
     // Update is called once per frame
@@ -52,8 +61,15 @@ public class EnemyController : MonoBehaviour
         if (targetWaypoint.x > 5000)
         {
             //print("CHECK: "+ waypointCount);
+            if(waypointCount == waypoints.Count)
+            {
+                finished = true;
+            }
+            else
+            {
             targetWaypoint = waypoints[waypointCount];
             waypointCount += 1;
+            }
         }
         else
         {
@@ -158,5 +174,22 @@ public class EnemyController : MonoBehaviour
                 sampler.y = waypoint.y-0.5f;
                 waypoints.Add(sampler);
             }
+    }
+
+    public void OnTriggerEnter(Collider c)
+    {
+        if (c.gameObject.tag == "SlowField")
+        {
+            currentSpeed -= 1;
+        }
+        print("Collision Entered");
+    }
+
+    public void OnTriggerExit(Collider c)
+    {
+        if (c.gameObject.tag == "SlowField")
+        {
+            currentSpeed += 1;
+        }
     }
 }

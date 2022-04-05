@@ -37,5 +37,10 @@ public class DemonTimer : MonoBehaviour
     {
         thisDemon.currentSpeed += Time.deltaTime * 0.25f;
         CurrentFill -= Time.deltaTime * 0.25f;
+        if(thisDemon.finished)
+        {
+            thisDemon.UpdateHealth();
+            DemonParent.SetActive(false);
+        }
     }
 }

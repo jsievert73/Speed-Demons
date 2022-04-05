@@ -7,15 +7,24 @@ public class TileMap : MonoBehaviour
 {
     public GameObject selectedUnit;
     public GameObject player;
+    public int towers = 3;
     public TileType[] tileTypes;
     public int[,] tiles;
     public Node[,] graph;
     public int enemyCount;
     private List<Node> currentPath;
     public List<EnemyController> enemies = new List<EnemyController>();
+    public GameObject[,] tower;
+    public int health = 3;
 
     int mapSizeX = 10;
     int mapSizeY = 10;
+    public GameObject towerPic1;
+    public GameObject towerPic2;
+    public GameObject towerPic3;
+    public GameObject healthPic1;
+    public GameObject healthPic2;
+    public GameObject healthPic3;
 
     void Start() 
     {
@@ -26,6 +35,14 @@ public class TileMap : MonoBehaviour
         GenerateMapData();
         GeneratePathfindingGraph();
         GenerateMapVisuals();
+        tower = new GameObject[mapSizeX,mapSizeY];
+        for (int x = 0; x < 10; x++)
+        {
+            for (int y = 0; y <10; y++)
+            {
+                tower[x,y] = player;
+            }
+        }
         GeneratePathTo(8,8,selectedUnit.GetComponent<Unit>());
         foreach (Node waypoint in selectedUnit.GetComponent<Unit>().currentPath)
         {
@@ -33,6 +50,39 @@ public class TileMap : MonoBehaviour
             sampler.x = waypoint.x;
             sampler.y = waypoint.y;
             //print("SAMPLER" + sampler);
+        }
+    }
+    void Update()
+    {
+        if(towers == 3)
+        {
+            towerPic3.SetActive(true);
+        }
+        if(towers == 2)
+        {
+            towerPic3.SetActive(false);
+            towerPic2.SetActive(true);
+        }
+        if(towers == 1)
+        {
+            towerPic2.SetActive(false);
+            towerPic1.SetActive(true);
+        }
+        if(towers == 0)
+        {
+            towerPic1.SetActive(false);
+        }
+        if(health == 2)
+        {
+            healthPic3.SetActive(false);
+        }
+        else if(health == 1)
+        {
+            healthPic2.SetActive(false);
+        }
+        else if(health == 0)
+        {
+            healthPic1.SetActive(false);
         }
     }
     void GenerateMapData() 
