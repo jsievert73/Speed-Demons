@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9529412, g: 0.0744228, b: 0, a: 0.6117647}
+  m_Color: {r: 0.9529412, g: 0.0744228, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -381,6 +381,7 @@ MonoBehaviour:
   referenceUnit: {fileID: 0}
   currentSpeed: 2
   map: {fileID: 0}
+  finished: 0
 --- !u!1 &4511125534693123467
 GameObject:
   m_ObjectHideFlags: 0

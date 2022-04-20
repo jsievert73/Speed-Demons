@@ -43,6 +43,15 @@ public class EnemyController : MonoBehaviour
         map.health -= 1;
     }
 
+    public void UpdateScore()
+    {
+        map.score -= 1;
+        if (map.score <= 0)
+        {
+            map.NextLevel();
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {

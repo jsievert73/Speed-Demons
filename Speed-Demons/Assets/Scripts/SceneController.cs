@@ -6,7 +6,7 @@ using System.Runtime;
 
 public class SceneController : MonoBehaviour
 {
-    private static string [] Levels = {"MainMenu", "Level1", "GameOver", "GameWin"};
+    private static string [] Levels = {"MainMenu", "SpeedDemonsTiled", "GameOver", "GameWin"};
     private static int LevelIndex = 0;
     public void MainMenu()
     {

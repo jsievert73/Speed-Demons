@@ -21,6 +21,7 @@ public class DemonTimer : MonoBehaviour
             radialFill.fillAmount = fillPercentage;
             if(currentValue <= 0f)
             {
+                thisDemon.UpdateScore();
                 DemonParent.SetActive(false);
             }
         }

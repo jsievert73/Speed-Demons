@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Linq;
 
 public class TileMap : MonoBehaviour
@@ -16,6 +17,7 @@ public class TileMap : MonoBehaviour
     public List<EnemyController> enemies = new List<EnemyController>();
     public GameObject[,] tower;
     public int health = 3;
+    public int score = 20;
 
     int mapSizeX = 10;
     int mapSizeY = 10;
@@ -25,6 +27,8 @@ public class TileMap : MonoBehaviour
     public GameObject healthPic1;
     public GameObject healthPic2;
     public GameObject healthPic3;
+    public int level;
+    public Text scoretext;
 
     void Start() 
     {
@@ -54,6 +58,7 @@ public class TileMap : MonoBehaviour
     }
     void Update()
     {
+        scoretext.text = "Demons Remaining: "+score;
         if(towers == 3)
         {
             towerPic3.SetActive(true);
@@ -83,8 +88,24 @@ public class TileMap : MonoBehaviour
         else if(health == 0)
         {
             healthPic1.SetActive(false);
+            LevelController.ChangeScene("GameOver");
         }
     }
+
+    public void NextLevel()
+    {
+        string next = "SpeedDemonsTiled" + (level + 1);
+        if (level + 1 > 2)
+        {
+            LevelController.ChangeScene("GameWin");
+        }
+        else
+        {
+            LevelController.ChangeScene(next);
+        }
+        
+    }
+
     void GenerateMapData() 
     {
         //Allocate our map tiles
@@ -98,25 +119,53 @@ public class TileMap : MonoBehaviour
             }
         }
 
-        //Swampy Area
-        for (int x= 3; x <= 5; x++)
+        if(level == 1)
         {
-            for (int y=0; y <4; y++)
+            //Swampy Area
+            for (int x= 3; x <= 5; x++)
             {
-                tiles [x,y] = 1;
+                for (int y=0; y <4; y++)
+                {
+                    tiles [x,y] = 1;
+                }
             }
-        }
 
-        // Let's make a u-shaped mountain range
-        tiles[4, 4] = 2;
-        tiles[5, 4] = 2;
-        tiles[6, 4] = 2;
-        tiles[7, 4] = 2;
-        tiles[8, 4] = 2;
-        tiles[4, 5] = 2;
-        tiles[4, 6] = 2;
-        tiles[8, 5] = 2;
-        tiles[8, 6] = 2;
+            // Let's make a u-shaped mountain range
+            tiles[4, 4] = 2;
+            tiles[5, 4] = 2;
+            tiles[6, 4] = 2;
+            tiles[7, 4] = 2;
+            tiles[8, 4] = 2;
+            tiles[4, 5] = 2;
+            tiles[4, 6] = 2;
+            tiles[8, 5] = 2;
+            tiles[8, 6] = 2;
+            tiles[8,8] = 4;
+        }
+        else if(level == 2)
+        {
+            tiles[3,0] = 2;
+            tiles[3,1] = 2;
+            tiles[3,2] = 2;
+            tiles[3,3] = 2;
+            tiles[3,4] = 2;
+            tiles[3,5] = 2;
+            tiles[3,6] = 2;
+            tiles[3,7] = 1;
+            tiles[3,8] = 1;
+            tiles[3,9] = 1;
+            tiles[5,5] = 2;
+            tiles[5,7] = 1;
+            tiles[5,9] = 2;
+            tiles[5,6] = 2;
+            tiles[5,8] = 1;
+            tiles[4,0] = 1;
+            tiles[4,1] = 1;
+            tiles[4,2] = 1;
+            tiles[4,3] = 1;
+            tiles[4,4] = 1;
+            tiles[8,8] = 4;
+        }
     }
 
     //Accessing our tileTypes data to determine movementCosts
