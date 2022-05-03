@@ -45,8 +45,8 @@ public class ClickableTile : MonoBehaviour
             Quaternion rotation = Quaternion.Euler(-90, 0, 0);
             GameObject go = (GameObject)Instantiate(tt.tileVisualPrefab, new Vector3(tileX,tileY,-0.5f), rotation);
             map.tower[tileX,tileY] = go;
-            if(map.graph[tileX,tileY].inUse)
-            {
+            //if(map.graph[tileX,tileY].inUse)
+            //{
                 if((map.graph[tileX,tileY].chokePoint || map.graph[tileX,tileY].chokeAdjacent))
                 {
                     map.EditPath(0,0,map.selectedUnit.GetComponent<Unit>(),8,8);
@@ -55,10 +55,10 @@ public class ClickableTile : MonoBehaviour
                 {
                     map.EditPath(map.graph[tileX,tileY].predecessor.x, map.graph[tileX,tileY].predecessor.y, map.selectedUnit.GetComponent<Unit>(), map.graph[tileX,tileY].follower.x,map.graph[tileX,tileY].follower.y);
                 }
-            }
+            //}
         }
         
-        /*if (active)
+        if (active)
         {
             for (int x = 1; x < range+1;x++)
             {
@@ -91,6 +91,6 @@ public class ClickableTile : MonoBehaviour
                 }
             }
             Debug.Log("Invalid Selection");
-        }*/
+        }
     }
 }

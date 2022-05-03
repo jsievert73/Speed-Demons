@@ -14,9 +14,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Deprecated/GameOver.unity
     guid: 0383e734a250c9143ae35ee2ea33cbbf
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Deprecated/GameWin.unity
     guid: 12d978eb1cf38c04fbe0217a826036c7
+  - enabled: 1
+    path: Assets/Scenes/GameWin.unity
+    guid: 009f1a9cc8929d9458238d8f327b44ca
   - enabled: 1
     path: Assets/gameOver.unity
     guid: ea879358213cc3f49be25fcf10b5e07e
